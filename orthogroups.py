@@ -89,7 +89,14 @@ done;
 conda activate R
 bash nature.sh
 
-
+#输出out.csv进行排序,打开excel→转置矩阵→全选中数据→查看宏→新建宏→复制代码保存执行→转置矩阵
+sub colsort()
+Set ss = Selection 
+For i = 1 To ss.Columns.Count 
+ss.Columns(i).Sort Key1:=ss.Columns(i), Order1:=xlAscending, Header:=xlNo, _ 
+  Orientation:=xlTopToBottom 
+Next 
+End Sub
 
 
 
