@@ -1,0 +1,53 @@
+## noncoding region convergent evolution detection
+#use orthofinder get ortholog gene list
+nohup orthofinder -f protein/ -a 12 -t 12 &
+
+#R语言，提取single-copy genelist，通过genelist 和 gff 文件 提取对应 gene坐标
+#使用R从输出文件中的 orthogroups 包含的 orthogroups.tsv 和 orthogroups_singlecopyorthologues.txt 提取single-copy genelist
+rm(list=ls())
+library(tidyverse)
+library(stringr)
+
+a <- read.csv(file = 'Orthogroups_SingleCopyOrthologues.txt',
+         header = F)
+b <- read.table(file = 'Orthogroups.tsv',header = T, 
+                sep = '\t', row.names = 1)
+genelist <- b[a$V1,]
+#去掉最后2个字符，修齐,将se.indicum包含'.cds1'字符修剪
+genelist <- genelist %>% mutate(eu.grandis=substr(genelist$eu.grandis,1,nchar(genelist$eu.grandis)-2),
+                                po.trichocarpa=substr(genelist$po.trichocarpa,1,nchar(genelist$po.trichocarpa)-2),
+                                se.indicum=substr(genelist$se.indicum,1,13))
+                                
+#提取坐标
+gff <- read.table(file = 'Ptrichocarpa_533_v4.1.gene.gff3',header = F, sep = '\t',quote = '')
+genelist <- edit(genelist)  #极个别不符合规范的可以手动修整
+list <- genelist$po.trichocarpa
+A <- gff[grep(pattern = paste(list[1],';',sep = ''), gff[,9]),] 
+A <- A[grep(pattern = 'mRNA',A[,3]),]
+A$gene=list[1]
+
+for (i in 2:407) {
+  D <- gff[grep(pattern =paste(list[i],';',sep = ''), gff[,9]),] 
+  D <- D[grep(pattern = 'mRNA',D[,3]),]
+  D$gene=list[i]
+  A <- A %>% full_join(D)
+}
+
+loc <- A %>% mutate(V11=V4-2000) %>% select(V1,V11,V4,gene)  #获得上游2kb位置
+write.table(loc,file = 'pot_list.csv', quote = F, sep = '\t', row.names = F, col.names = F)
+
+#Linux下
+#使用seqkit提取single-copy gene 上游2kb序列
+seqkit subseq --bed eug_list.csv /public1/users/zengws/genomedb/e_grandis/egrandis_v2.fa >eugup2000.fa
+
+#使用awk进行序列名修剪  >LG10_4825084-4827083:. SIN_1019093.t   改成 >SIN_1019093.t
+#将空格替换成 | ，随后保留分隔符第二部分 再加上 > 符号，最后未修改的照常打印
+cat sedup2000.fa | awk '{ gsub(" ","|",$0); print}' | awk -F '|' '/^>/ { print ">"$2; next } 1' > out.fa 
+
+
+#使用meme中的fimo程序，预测所有上游序列中包含的调控序列以及坐标
+fimo -o out.filename --max-stored-scores 10000000 --thresh 1e-5 jaspar_meme.txt input.fa
+
+#R语言
+#根据genelist，将每一行（每个single-copy组）作为输入向量，提取对应文件的 motif 位置
+
