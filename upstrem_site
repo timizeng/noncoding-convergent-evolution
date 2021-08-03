@@ -44,7 +44,6 @@ seqkit subseq --bed eug_list.csv /public1/users/zengws/genomedb/e_grandis/egrand
 #将空格替换成 | ，随后保留分隔符第二部分 再加上 > 符号，最后未修改的照常打印
 cat sedup2000.fa | awk '{ gsub(" ","|",$0); print}' | awk -F '|' '/^>/ { print ">"$2; next } 1' > out.fa 
 
-
 #使用meme中的fimo程序，预测所有上游序列中包含的调控序列以及坐标
 fimo -o out.filename --max-stored-scores 10000000 --thresh 1e-5 jaspar_meme.txt input.fa
 
