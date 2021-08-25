@@ -39,37 +39,37 @@ nohup axtToPsl at_vs_ors.chain.mask.axt arabidopsis_thaliana.chrsize oryza_sativ
 nohup axtToPsl at_vs_pot.chain.mask.axt arabidopsis_thaliana.chrsize populus_trichocarpa.chrsize at_vs_pot.psl &
 nohup axtToPsl at_vs_ra.chain.mask.axt arabidopsis_thaliana.chrsize rhizophora_apiculata.chrsize at_vs_ra.psl &
 nohup axtToPsl at_vs_sa.chain.mask.axt arabidopsis_thaliana.chrsize sonneratia_alba.chrsize at_vs_sa.psl &
-nohup axtToPsl at_vs_sei.chain.mask.axt arabidopsis_thaliana.chrsize se.indicum.chrsize at_vs_sei.psl &
+nohup axtToPsl at_vs_sei.chain.mask.axt arabidopsis_thaliana.chrsize se.indicum.chrsize at_vs_sei.psl &：
 nohup axtToPsl at_vs_am.chain.mask.axt arabidopsis_thaliana.chrsize avicennia_marina.chrsize at_vs_am.psl &
 
 .......将所有文件都转为psl格式......
 
 #step5:axtChain
-nohup axtChain -linearGap= -psl at_vs_ra.psl -faT arabidopsis_thaliana.fa -faQ rhizophora_apiculata.fa at_vs_ra.chain &
-nohup axtChain -linearGap= -psl at_vs_sa.psl -faT arabidopsis_thaliana.fa -faQ sonneratia_alba.fa at_vs_sa.chain &
-nohup axtChain -linearGap= -psl at_vs_pot.psl -faT arabidopsis_thaliana.fa -faQ populus_trichocarpa.fa at_vs_pot.chain &
-nohup axtChain -linearGap= -psl at_vs_eug.psl -faT arabidopsis_thaliana.fa -faQ eucalyptus_grandis.fa at_vs_eug.chain &
-nohup axtChain -linearGap= -psl at_vs_sei.psl -faT arabidopsis_thaliana.fa -faQ se.indicum.fa at_vs_sei.chain &
-nohup axtChain -linearGap= -psl at_vs_ors.psl -faT arabidopsis_thaliana.fa -faQ oryza_sativa.fa at_vs_ors.chain &
-nohup axtChain -linearGap= -psl at_vs_am.psl -faT arabidopsis_thaliana.fa -faQ avicennia_marina.fa at_vs_am.chain &
-nohup axtChain -linearGap= -psl at_vs_at.psl -faT arabidopsis_thaliana.fa -faQ arabidopsis_thaliana.fa at_vs_at.chain &
+nohup axtChain -linearGap=loose -psl at_vs_ra.psl -faT arabidopsis_thaliana.fa -faQ rhizophora_apiculata.fa at_vs_ra.chain &
+nohup axtChain -linearGap=loose -psl at_vs_sa.psl -faT arabidopsis_thaliana.fa -faQ sonneratia_alba.fa at_vs_sa.chain &
+nohup axtChain -linearGap=loose -psl at_vs_pot.psl -faT arabidopsis_thaliana.fa -faQ populus_trichocarpa.fa at_vs_pot.chain &
+nohup axtChain -linearGap=loose -psl at_vs_eug.psl -faT arabidopsis_thaliana.fa -faQ eucalyptus_grandis.fa at_vs_eug.chain &
+nohup axtChain -linearGap=loose -psl at_vs_sei.psl -faT arabidopsis_thaliana.fa -faQ se.indicum.fa at_vs_sei.chain &
+nohup axtChain -linearGap=loose -psl at_vs_ors.psl -faT arabidopsis_thaliana.fa -faQ oryza_sativa.fa at_vs_ors.chain &
+nohup axtChain -linearGap=loose -psl at_vs_am.psl -faT arabidopsis_thaliana.fa -faQ avicennia_marina.fa at_vs_am.chain &
+nohup axtChain -linearGap=loose -psl at_vs_at.psl -faT arabidopsis_thaliana.fa -faQ arabidopsis_thaliana.fa at_vs_at.chain &
 
 #step6:Netting,chainNet
 #a:chainMergeSort
 for i in *.chain;
 do
-	chainMergeSort $i > $i.sort.chain
+	chainMergeSort $i > $i.chain.sort
 done;
 
 #b:chainPreNet
-nohup chainPreNet at_vs_at.chain.sort.chain arabidopsis_thaliana.chrsize arabidopsis_thaliana.chrsize at_vs_at.prenet &
-nohup chainPreNet at_vs_eug.chain.sort.chain arabidopsis_thaliana.chrsize eucalyptus_grandis.chrsize at_vs_eug.prenet &
-nohup chainPreNet at_vs_ors.chain.sort.chain arabidopsis_thaliana.chrsize oryza_sativa.chrsize at_vs_ors.prenet &
-nohup chainPreNet at_vs_pot.chain.sort.chain arabidopsis_thaliana.chrsize populus_trichocarpa.chrsize at_vs_pot.prenet &
-nohup chainPreNet at_vs_ra.chain.sort.chain arabidopsis_thaliana.chrsize rhizophora_apiculata.chrsize at_vs_ra.prenet &
-nohup chainPreNet at_vs_sa.chain.sort.chain arabidopsis_thaliana.chrsize sonneratia_alba.chrsize at_vs_sa.prenet &
-nohup chainPreNet at_vs_sei.chain.sort.chain arabidopsis_thaliana.chrsize se.indicum.chrsize at_vs_sei.prenet &
-nohup chainPreNet at_vs_am.chain.sort.chain arabidopsis_thaliana.chrsize avicennia_marina.chrsize at_vs_am.prenet &
+nohup chainPreNet at_vs_at.chain.chain.sort arabidopsis_thaliana.chrsize arabidopsis_thaliana.chrsize at_vs_at.prenet &
+nohup chainPreNet at_vs_eug.chain.chain.sort arabidopsis_thaliana.chrsize eucalyptus_grandis.chrsize at_vs_eug.prenet &
+nohup chainPreNet at_vs_ors.chain.chain.sort arabidopsis_thaliana.chrsize oryza_sativa.chrsize at_vs_ors.prenet &
+nohup chainPreNet at_vs_pot.chain.chain.sort arabidopsis_thaliana.chrsize populus_trichocarpa.chrsize at_vs_pot.prenet &
+nohup chainPreNet at_vs_ra.chain.chain.sort arabidopsis_thaliana.chrsize rhizophora_apiculata.chrsize at_vs_ra.prenet &
+nohup chainPreNet at_vs_sa.chain.chain.sort arabidopsis_thaliana.chrsize sonneratia_alba.chrsize at_vs_sa.prenet &
+nohup chainPreNet at_vs_sei.chain.chain.sort arabidopsis_thaliana.chrsize se.indicum.chrsize at_vs_sei.prenet &
+nohup chainPreNet at_vs_am.chain.chain.sort arabidopsis_thaliana.chrsize avicennia_marina.chrsize at_vs_am.prenet &
 
 #c:chainNet
 nohup chainNet at_vs_am.prenet arabidopsis_thaliana.chrsize avicennia_marina.chrsize atam.net am.net &
@@ -112,7 +112,16 @@ nohup axtToMaf atsei.net2axt.sortaxt2 arabidopsis_thaliana.chrsize se.indicum.ch
 #axtToMaf可以改 maf中的序列标签，-tPrefix 和 -qPrefix，最后的roast运行,要求 maf文件中的比对标签必须带上物种名,且与输入物种树中的物种名完全一致
 axtToMaf -tPrefix=$tn -qPrefix=$qn $output_dir/6.net_to_axt/all_sort.axt $output_dir/$tn.sizes $output_dir/$qn.sizes $output_dir/7.maf/all.maf
 
+#dtplot
+for i in *.sing.maf;do last-dotplot $i $i.png;done;
+
 #step8:combine multiple alignment
 #maf内的比对标签，输入文件名，需要与输入物种树名称完全一致
-roast + E=arabidopsis_thaliana "(oryza_sativa ((((sonneratia_alba eucalyptus_grandis) arabidopsis_thaliana) (populus_trichocarpa rhizophora_apiculata)) (sesamum_indicum avicennia_marina)))" *.*.sing.maf final.roast.maf
+roast + E=arabidopsis_thaliana "(oryza_sativa ((((sonneratia_alba eucalyptus_grandis) arabidopsis_thaliana) (populus_trichocarpa rhizophora_apiculata)) (sesamum_indicum avicennia_marina)))" *.*.sing.maf 7species.final.maf
 
+#phyloFit 获得nonconserved.mod
+phyloFit --tree "(oryza_sativa,((((sonneratia_alba,eucalyptus_grandis),arabidopsis_thaliana),(populus_trichocarpa,rhizophora_apiculata)),(sesamum_indicum,avicennia_marina)))" --msa-format MAF --out-root nonconserved-4d 7species.final.maf
+
+
+#使用 mafSplit 分解比对文件
+mafSplit -byTarget arabidopsis_thaliana -useFullSequenceName outdir/ 7species.final.maf
