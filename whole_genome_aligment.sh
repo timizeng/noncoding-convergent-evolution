@@ -1,4 +1,13 @@
 #获得基因组序列文件，并修改fa序列名（待补），注意不要包含 | 等多余字符，可以有空格，要符合chrsize格式
+#step0:去除重复序列，reaptemask
+nohup trf /public1/users/zengws/workspace/convergent-evo/cnnes/whole-genome-aliment/geomedb/avicennia_marina/AM_final.fa 2 7 7 80 10 50 500 -f -d -m -h &
+nohup trf /public1/users/zengws/workspace/convergent-evo/cnnes/whole-genome-aliment/geomedb/oryza_sativa/osativa_v7.fa 2 7 7 80 10 50 500 -f -d -m -h &
+nohup trf /public1/users/zengws/workspace/convergent-evo/cnnes/whole-genome-aliment/geomedb/e_grandis/egrandis_v2.fa 2 7 7 80 10 50 500 -f -d -m -h &
+nohup trf /public1/users/zengws/workspace/convergent-evo/cnnes/whole-genome-aliment/geomedb/rhizophora_apiculata/RA_final.fa 2 7 7 80 10 50 500 -f -d -m -h &
+nohup trf /public1/users/zengws/workspace/convergent-evo/cnnes/whole-genome-aliment/geomedb/populus_trichocarpa/ptrichocarpa_v4.fa 2 7 7 80 10 50 500 -f -d -m -h &
+nohup trf /public1/users/zengws/workspace/convergent-evo/cnnes/whole-genome-aliment/geomedb/sonneratia_alba/SA_final.fa 2 7 7 80 10 50 500 -f -d -m -h &
+nohup trf /public1/users/zengws/workspace/convergent-evo/cnnes/whole-genome-aliment/geomedb/se_indicum/se.indicum.dna.fa 2 7 7 80 10 50 500 -f -d -m -h &
+
 #step1: 获得2bit文件，genome.fa ==> genome.2bit, 并提取基因组的 chromesize
 #a:写成循环
 for i in *.fa;
@@ -296,3 +305,10 @@ TREE: (oryza_sativa:529.654,((((sonneratia_alba:1854.14,eucalyptus_grandis:1756.
 
 #按条拆分染色体
  awk '/^>/{f=++d".fa"} {print > f}' arabidopsis_thaliana.mask.fa
+
+
+ #不使用4d位点直接生成 neutral model
+ phyloFit --tree "(oryza_sativa,((((sonneratia_alba,eucalyptus_grandis),arabidopsis_thaliana),(populus_trichocarpa,rhizophora_apiculata)),(sesamum_indicum,avicennia_marina)))"  --msa-format MAF --out-root neutral all.final.maf
+
+#phylop
+ phyloP --wig-scores --mode CONACC --method LRT neutral.mod chr.maf > phyloP.chr.wig
