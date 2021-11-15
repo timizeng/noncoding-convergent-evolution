@@ -276,7 +276,8 @@ liftOver conserved.bed at_vs_ors.chain orsconserved.bed unmapp.bed
 #bedtools提取对应序列
 bedtools getfasta -fi oryza_sativa.mask.fa -bed orsconserved.bed -s > orycnees.fa
 
-
+#用mafFind转换坐标，此方法为最佳匹配转换，但是需要写脚本批量转换
+mafFind arabidopsis_thaliana.avicennia_marina.sing.maf 94478 94510 arabidopsis_thaliana.Chr1 slice
 
 ALPHABET: A C G T
 ORDER: 0
