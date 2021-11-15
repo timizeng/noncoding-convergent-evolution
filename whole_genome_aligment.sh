@@ -277,6 +277,63 @@ liftOver conserved.bed at_vs_ors.chain orsconserved.bed unmapp.bed
 bedtools getfasta -fi oryza_sativa.mask.fa -bed orsconserved.bed -s > orycnees.fa
 
 
+#使用mafFind转换坐标,根据两两比对的maf文件提取最佳匹配，随后转换坐标,例如转换 Chr1 94478 94510这个
+#保守元件的位置到白骨壤的基因组中的对应位置
+mafFind arabidopsis_thaliana.avicennia_marina.sing.maf 94478 94510 arabidopsis_thaliana.Chr1 slice > out.file
+
+#编写批量化脚本，将所有保守元件坐标映射到对应基因组中的位置
+cat conserved.maf.bed | awk -F "\t" '{print "mafFind ./files/arabidopsis_thaliana.avicennia_marina.sing.maf ",$2," ",$3," arabidopsis_thaliana.",$1," slice >> out.file "}' OFS="" > cmd.sh
+sh cmd.sh
+
+# conserved.maf.bed文件为phastcons预测出的保守元件在参考基因组的位置（拟南芥），格式如下：
+Chr1    94478   94510
+Chr1    111889  111961
+Chr1    123880  123902
+Chr1    124040  124063
+Chr1    134320  134342
+Chr1    188399  188420
+
+# out.file结果文件如下：
+```
+##maf version=1 scoring=mafFind.v1
+# mafFind.v1 ./files/arabidopsis_thaliana.avicennia_marina.sing.maf 94478 94510 arabidopsis_thaliana.Chr1 slice
+a score=2484.0
+s arabidopsis_thaliana.Chr1   94478 33 + 30427671 TGGAGTGATACACCTCCATGGAGCTTAGAGCGT
+s avicennia_marina.scaffold3 383051 33 -  6638318 TGGAGTGATACTCCTCCATGGAGCTTGGAACGG
+
+##eof maf
+##maf version=1 scoring=mafFind.v1
+# mafFind.v1 ./files/arabidopsis_thaliana.avicennia_marina.sing.maf 111889 111961 arabidopsis_thaliana.Chr1 slice
+a score=6165.0
+s arabidopsis_thaliana.Chr1  111889 72 + 30427671 AGGTTCCACCGAGACTTGAACTCGGGTTACTAGATTCAGAGTCTAGTGTCCTAACCGCTAGACCATGGAACC
+s avicennia_marina.scaffold3 439020 72 -  6638318 AGGTTCCACCGAGATTTGAACTCGGGTTCCTGGATTCAGAGTCCAATGTCCTAACCGCTAGACCATGGAACC
+```
+
+#接下来使用脚本处理 out.file
+grep "s " out.file | awk -v OFS='\t' '{print $2,$3,$4,$5,$7,NR}' > cons.ara.am.bed
+grep "avicennia_marina.scaffold" cons.ara.am.bed | awk '{print $1,$2,$3,$4,$6,$7=$2+$3,$8=$6/2}'| awk '{print $1"\t"$2"\t"$6"\t""cons_"NR"\t""0""\t"$4}' |sed 's/avicennia_marina.//g' > avicennia_marina.final.bed
+grep "arabidopsis_thaliana" cons.ara.am.bed | awk '{print $1,$2,$3,$4,$6,$7=$2+$3,$8=($6+1)/2}'| awk '{print $1"\t"$2"\t"$6"\t""cons_"NR"\t""0""\t"$4}' |sed 's/arabidopsis_thaliana.//g' > arabidopsis_thaliana.final.bed
+
+
+#这样输出的保守元件位置以及序号能够对应，方便索引，第4列名字相同即代表是同一个保守元件映射
+#例如前3个保守元件位置在拟南芥中如下：
+Chr1 94478 94511 cons_1 +
+Chr1 111889 111961 cons_2 +
+Chr1 123880 123900 cons_3 +
+#其对应在白骨壤中的位置如下：
+scaffold3 383051 383084 cons_1 -
+scaffold3 439020 439092 cons_2 -
+scaffold3 497478 497498 cons_3 -
+
+
+
+
+
+
+
+
+
+
 
 ALPHABET: A C G T
 ORDER: 0
