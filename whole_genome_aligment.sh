@@ -276,8 +276,6 @@ liftOver conserved.bed at_vs_ors.chain orsconserved.bed unmapp.bed
 #bedtools提取对应序列
 bedtools getfasta -fi oryza_sativa.mask.fa -bed orsconserved.bed -s > orycnees.fa
 
-<<<<<<< HEAD
-
 #使用mafFind转换坐标,根据两两比对的maf文件提取最佳匹配，随后转换坐标,例如转换 Chr1 94478 94510这个
 #保守元件的位置到白骨壤的基因组中的对应位置
 mafFind arabidopsis_thaliana.avicennia_marina.sing.maf 94478 94510 arabidopsis_thaliana.Chr1 slice > out.file
@@ -328,17 +326,6 @@ scaffold3 497478 497498 cons_3 -
 
 
 
-
-
-
-
-
-
-
-=======
-#用mafFind转换坐标，此方法为最佳匹配转换，但是需要写脚本批量转换
-mafFind arabidopsis_thaliana.avicennia_marina.sing.maf 94478 94510 arabidopsis_thaliana.Chr1 slice
->>>>>>> 5a9b2e6e50fe15ef2ff664ff34b446015e4a8344
 
 ALPHABET: A C G T
 ORDER: 0
