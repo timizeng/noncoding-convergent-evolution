@@ -189,3 +189,29 @@ nohup phastCons --most-conserved phastCons.Chr4.bed --score Chr4.maf Average.Chr
 nohup phastCons --most-conserved phastCons.Chr5.bed --score Chr5.maf Average.Chr5.cons.mod,nonconserved-4d.mod > phastCons.Chr5.wig &
 nohup phastCons --most-conserved phastCons.ChrM.bed --score ChrM.maf Average.ChrM.cons.mod,nonconserved-4d.mod > phastCons.ChrM.wig &
 nohup phastCons --most-conserved phastCons.ChrC.bed --score ChrC.maf Average.ChrC.cons.mod,nonconserved-4d.mod > phastCons.ChrC.wig &
+
+
+ALPHABET: A C G T
+ORDER: 0
+SUBST_MOD: REV
+TRAINING_LNL: -44411214.590680
+BACKGROUND: 0.277898 0.222206 0.221925 0.277971
+RATE_MAT:
+  -0.959657    0.197598    0.491817    0.270242
+   0.247122   -1.045227    0.182576    0.615528
+   0.615862    0.182808   -1.050870    0.252200
+   0.270171    0.492045    0.201350   -0.963566
+TREE: (oryza_sativa:0.109119,((((sonneratia_alba:0.141679,eucalyptus_grandis:0.153766):0.0424577,arabidopsis_thaliana:0.176973):0.0191425,(populus_trichocarpa:0.133233,rhizophora_apiculata:0.132441):0.0402056):0.0244227,(sesamum_indicum:0.120677,avicennia_marina:0.130972):0.0516579):0.109119);
+
+
+ALPHABET: A C G T
+ORDER: 0
+SUBST_MOD: REV
+TRAINING_LNL: -4180265.866951
+BACKGROUND: 0.258506 0.199520 0.171398 0.370576
+RATE_MAT:
+  -1.254595    0.284576    0.072066    0.897953
+   0.368707   -0.713224    0.194462    0.150054
+   0.108691    0.226369   -0.959001    0.623942
+   0.626391    0.080790    0.288584   -0.995765
+TREE: (oryza_sativa:529.654,((((sonneratia_alba:1854.14,eucalyptus_grandis:1756.48):2024.8,arabidopsis_thaliana:4295.12):1634.22,(populus_trichocarpa:1507.75,rhizophora_apiculata:1307.06):1260.47):952.635,(sesamum_indicum:976.937,avicennia_marina:1028.46):934.912):529.654);
