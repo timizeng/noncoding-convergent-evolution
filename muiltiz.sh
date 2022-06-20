@@ -10,68 +10,63 @@ work_path=$1
 mkdir -p ${work_path}/result
 mkdir -p ${work_path}/result/00_tmp
 mkdir -p ${work_path}/result/01_masked_genome
-mkdir -p ${work_path}/result/02_2bit_genome
-mkdir -p ${work_path}/result/03_chromesize
+mkdir -p ${work_path}/result/02_2bit_chromesize
+mkdir -p ${work_path}/result/03_pair_lastz
 mkdir -p ${work_path}/result/03_filter_alignment
-
-mkdir -p ${work_path}/logs
-mkdir -p ${work_path}/logs/fastqc_v1
-mkdir -p ${work_path}/logs/fastp
-mkdir -p ${work_path}/logs/bowtie2_alignment
-mkdir -p ${work_path}/logs/picard_markdup
-mkdir -p ${work_path}/logs/macs2/merge_peak
-mkdir -p ${work_path}/logs/macs2/div_peak
-
 
 
 ls ${work_path}/genome/*.fa | while read id;
 do
-        readlink -f ${id}  >> ${work_path}/00_tmp/genomelist.txt
+        readlink -f ${id}  >> ${work_path}/result/00_tmp/genomelist.txt
 done
 
 masked_genome=${work_path}/result/01_masked_genome
 
 #step1:reapetmask,trf mask
 echo trf begins
-cat ${work_path}/00_tmp/genomelist.txt | while read id;
+cat ${work_path}/result/00_tmp/genomelist.txt | while read id;
 do
-    base=$(basename ${id})
+    base=$(basename ${id} .fa)
     echo Sample name is ${base}
     trf ${id} 2 7 7 80 10 50 500 -f -d -m -h
-    gzip ${base}.*.mask
-    mv ${base}.*.mask.gz ${masked_genome}/${base}.mask.fa.gz
-    rm ${base}.*.dat
+    mv ${base}.*.mask ${masked_genome}/${base}.mask.fa
+    echo ${base} is ok
 done
 
+rm *.dat
 
-ls ${work_path}/result/01_masked_genome/*.mask.fa.gz | while read id;
+ls ${work_path}/result/01_masked_genome/*.mask.fa | while read id;
 do
-        readlink -f ${id} >> ${work_path}/00_tmp/masked_genomelist.txt
+        readlink -f ${id} >> ${work_path}/result/00_tmp/masked_genomelist.txt
 done
 
-
-twobit=${work_path}/result/02_2bit_genome
-chromesize=${work_path}/result/03_chromesize
+twobit_chrsz=${work_path}/result/02_2bit_chromesize
 #step2:transform to 2bit format and get chromesize
-cat ${work_path}/00_tmp/masked_genomelist.txt | while read id;
+echo twobit_chrsz begins
+cat ${work_path}/result/00_tmp/masked_genomelist.txt | while read id;
 do
-    base=$(basename ${id})
+    base=$(basename ${id} .mask.fa)
     echo Sample name is ${base}
-    faToTwoBit ${id} ${twobit}/${base}.2bit
-    twoBitInfo ${twobit}/${base}.2bit stdout | sort -k2,2nr > ${chromesize}/${base}.chromsizes
+    faToTwoBit ${id} ${twobit_chrsz}/${base}.2bit
+    twoBitInfo ${twobit_chrsz}/${base}.2bit stdout | sort -k2,2nr > ${twobit_chrsz}/${base}.chromsizes
+    echo ${base} is ok
 done
 
-#step3:pairwise alignment,arabidopsis_thaliana as reference
 
-for i in *.fa;
+pair_align=${work_path}/result/03_pair_lastz
+#step3:pairwise alignment,arabidopsis_thaliana as reference
+echo pairwise alignment begins
+cat ${work_path}/result/00_tmp/masked_genomelist.txt | while read id;
 do
- lastz-1.04.00 arabidopsis_thaliana.fa[multiple] $i[multiple] --notransition --ambiguous=iupac --step=20 --nogapped --format=axt > at_vs_$i.axt
+    base=$(basename ${id} .mask.fa)
+    echo Sample name is ${base}
+    lastz-1.04.00 ${masked_genome}/arabidopsis_thaliana.mask.fa[multiple] ${id}[multiple] --notransition --ambiguous=iupac --step=20 --nogapped --format=axt > at_vs_${base}.axt
+    echo ${base} is ok
 done;
 
-#step4:format transform axt to psl
-for i in *.axt;
-do
 
+
+#step4:format transform axt to psl
 nohup axtToPsl at_vs_at.chain.mask.axt arabidopsis_thaliana.chrsize arabidopsis_thaliana.chrsize at_vs_at.psl &
 nohup axtToPsl at_vs_eug.chain.mask.axt arabidopsis_thaliana.chrsize eucalyptus_grandis.chrsize at_vs_eug.psl &
 nohup axtToPsl at_vs_ors.chain.mask.axt arabidopsis_thaliana.chrsize oryza_sativa.chrsize at_vs_ors.psl &
@@ -149,3 +144,12 @@ nohup axtToMaf -tPrefix=arabidopsis_thaliana. -qPrefix=sesamum_indicum. atsei.ne
 
 #step8:combine multiple alignment
 roast + E=arabidopsis_thaliana "(oryza_sativa ((((sonneratia_alba eucalyptus_grandis) arabidopsis_thaliana) (populus_trichocarpa rhizophora_apiculata)) (sesamum_indicum avicennia_marina)))" *.*.sing.maf 7species.final.maf
+
+
+
+
+
+
+
+
+
