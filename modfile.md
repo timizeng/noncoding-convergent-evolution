@@ -45,6 +45,36 @@ TREE: (((arabidopsis_thaliana:0.163551,theobroma_cacao:0.0927108):0.00404711,(ci
 ```
 
 
+.....通过estimate-rho,--rho 0.4 --target-coverage 0.25 --expected-length 12 计算的 non.cons.mod......
+```perl
+ALPHABET: A C G T
+ORDER: 0
+SUBST_MOD: REV
+TRAINING_LNL: -17806155.751065
+BACKGROUND: 0.276160 0.184605 0.149641 0.389594
+RATE_MAT:
+  -0.942714    0.216777    0.346913    0.379023
+   0.324288   -1.285675    0.222231    0.739157
+   0.640224    0.274157   -1.329930    0.415548
+   0.268667    0.350242    0.159609   -0.778519
+TREE: (((arabidopsis_thaliana:0.730447,theobroma_cacao:0.414062):0.0180751,(citrus_sinensis:0.276673,(swietenia_macrophylla:0.115554,(xylocarpus_granatum:0.0646164,(xylocarpus_rumphii:0.0782978,xylocarpus_moluccensis:0.0691567):0.0104676):0.0622751):0.13709):0.147878):0.0481315,(populus_trichocarpa:0.351873,(carallia_pectinifolia:0.170954,((bruguiera_gymnorhiza:0.0671421,bruguiera_sexangula:0.0812895):0.0486947,((ceriops_tagal:0.128577,(kandelia_obovata:0.0496971,kandelia_candel:0.0528404):0.0684067):0.0151461,(rhizophora_mangle:0.074894,(rhizophora_apiculata:0.0634833,(rhizophora_mucronata:0.063605,rhizophora_stylosa:0.0507747):0.0144585):0.0272553):0.0523516):0.0156791):0.0580341):0.219283):0.0481315);
+```
+
+.....通过estimate-rho,--rho 0.4 --target-coverage 0.25 --expected-length 12 计算的 cons.mod......
+```perl
+ALPHABET: A C G T
+ORDER: 0
+SUBST_MOD: REV
+TRAINING_LNL: -17806155.751065
+BACKGROUND: 0.276160 0.184605 0.149641 0.389594
+RATE_MAT:
+  -0.942714    0.216777    0.346913    0.379023
+   0.324288   -1.285675    0.222231    0.739157
+   0.640224    0.274157   -1.329930    0.415548
+   0.268667    0.350242    0.159609   -0.778519
+TREE: (((arabidopsis_thaliana:0.138286,theobroma_cacao:0.0783889):0.00342192,(citrus_sinensis:0.0523789,(swietenia_macrophylla:0.0218763,(xylocarpus_granatum:0.012233,(xylocarpus_rumphii:0.0148231,xylocarpus_moluccensis:0.0130925):0.00198169):0.0117897):0.0259534):0.0279958):0.0091121,(populus_trichocarpa:0.0666155,(carallia_pectinifolia:0.0323645,((bruguiera_gymnorhiza:0.0127111,bruguiera_sexangula:0.0153895):0.00921873,((ceriops_tagal:0.0243418,(kandelia_obovata:0.0094085,kandelia_candel:0.0100036):0.0129505):0.00286741,(rhizophora_mangle:0.0141787,(rhizophora_apiculata:0.0120185,(rhizophora_mucronata:0.0120415,rhizophora_stylosa:0.0096125):0.00273724):0.00515989):0.00991104):0.00296832):0.0109868):0.041514):0.0091121);
+```
+
 ............通过滑窗计算的ave.noncons.mod, --gc 0.4 -target-coverage 0.125 --expected-length 20..........
 ```perl
 ALPHABET: A C G T
@@ -71,6 +101,5 @@ RATE_MAT:
    0.707116    0.167011   -1.133529    0.259402
    0.269458    0.469245    0.172934   -0.911637
 TREE: (((arabidopsis_thaliana:0.0883812,theobroma_cacao:0.0623101):0.0102761,(citrus_sinensis:0.0487847,(swietenia_macrophylla:0.0279154,(xylocarpus_granatum:0.0154625,(xylocarpus_rumphii:0.0172362,xylocarpus_moluccensis:0.0165067):0.00412912):0.0152416):0.0233294):0.0214665):0.00713203,(populus_trichocarpa:0.0576809,(carallia_pectinifolia:0.0383625,((bruguiera_gymnorhiza:0.0180177,bruguiera_sexangula:0.0195072):0.0120448,((ceriops_tagal:0.0281078,(kandelia_obovata:0.0137497,kandelia_candel:0.0138919):0.015195):0.00495317,(rhizophora_mangle:0.022015,(rhizophora_apiculata:0.0152364,(rhizophora_mucronata:0.0153947,rhizophora_stylosa:0.0135783):0.00420926):0.00655642):0.0131142):0.00384291):0.0151912):0.0300964):0.00713203);
-
 ```
 
