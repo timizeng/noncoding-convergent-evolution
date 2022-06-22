@@ -88,7 +88,8 @@ phyloBoot --read-mods '*noncons.txt' --output-average ave.noncons.mod
 
 mkdir -p ELEMENTS SCORES
 rm -f ELEMENTS/* SCORES/*
-for file in CHUNKS/Chr*.*.ss ; do 
+for file in CHUNKS/Chr*.*.ss ; 
+do 
     root=$(basename ${file} .ss) 
     phastCons --target-coverage 0.125 --expected-length 20 \
     --most-conserved ELEMENTS/${root}.bed --score \
