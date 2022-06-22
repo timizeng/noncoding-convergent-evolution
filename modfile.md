@@ -10,16 +10,7 @@ RATE_MAT:
    0.324288   -1.285675    0.222231    0.739157
    0.640224    0.274157   -1.329930    0.415548
    0.268667    0.350242    0.159609   -0.778519
-TREE: (((arabidopsis_thaliana:0.730447,theobroma_cacao:0.414062):0.0180751,
-(citrus_sinensis:0.276673,(swietenia_macrophylla:0.115554,(xylocarpus_grana
-tum:0.0646164,(xylocarpus_rumphii:0.0782978,xylocarpus_moluccensis:0.0691567)
-:0.0104676):0.0622751):0.13709):0.147878):0.0481315,(populus_trichocarpa:0.35
-1873,(carallia_pectinifolia:0.170954,((bruguiera_gymnorhiza:0.0671421,bruguie
-ra_sexangula:0.0812895):0.0486947,((ceriops_tagal:0.128577,(kandelia_obovata:
-0.0496971,kandelia_candel:0.0528404):0.0684067):0.0151461,(rhizophora_mangle:
-0.074894,(rhizophora_apiculata:0.0634833,(rhizophora_mucronata:0.063605,rhizo
-phora_stylosa:0.0507747):0.0144585):0.0272553):0.0523516):0.0156791):0.058034
-1):0.219283):0.0481315);
+TREE: (((arabidopsis_thaliana:0.730447,theobroma_cacao:0.414062):0.0180751,(citrus_sinensis:0.276673,(swietenia_macrophylla:0.115554,(xylocarpus_granatum:0.0646164,(xylocarpus_rumphii:0.0782978,xylocarpus_moluccensis:0.0691567):0.0104676):0.0622751):0.13709):0.147878):0.0481315,(populus_trichocarpa:0.351873,(carallia_pectinifolia:0.170954,((bruguiera_gymnorhiza:0.0671421,bruguiera_sexangula:0.0812895):0.0486947,((ceriops_tagal:0.128577,(kandelia_obovata:0.0496971,kandelia_candel:0.0528404):0.0684067):0.0151461,(rhizophora_mangle:0.074894,(rhizophora_apiculata:0.0634833,(rhizophora_mucronata:0.063605,rhizophora_stylosa:0.0507747):0.0144585):0.0272553):0.0523516):0.0156791):0.0580341):0.219283):0.0481315);
 ```
 
 
