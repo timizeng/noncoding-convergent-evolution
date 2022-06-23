@@ -186,7 +186,9 @@ WARNING: likelihood decreased during EM: it 8 total_logl=-580783.8808, prev_tota
 .................通过滑窗和 --estimate-trees 计算滑窗的cons.mod 和 non.cons.mod 最后对单个染色体聚合mods......................
 ##通过滑窗计算 每条 染色体的 cons.mod
 #根据 http://compgen.cshl.edu/phast/phastCons-HOWTO.html 中的4.1部分教程重新分析
-1.Split the alignments into small fragments
+1.Split the alignments into small fragments,当滑窗窗口变小时，
+--min-informative 1000 --between-blocks 5000 需要适当变小，
+不然会丢弃掉很多block
 
 mkdir -p chunks            # put fragments here
         for file in Chr*.maf ; do
@@ -236,4 +238,38 @@ do
 done
 
 
+....................评价non.cons.mod.........
+#分割chunk, --min-informative 1000 --between-blocks 5000 要根据 window大小适当缩放
+for file in Chr*.maf ;
+do             
+    root=$(basename ${file} .maf)             
+    msa_split ${file} --in-format MAF --refseq ${root}.fa --windows 1000000,0\
+     --out-root chunks/${root} --out-format SS --min-informative 1000 \
+     --between-blocks 5000
+done
 
+#将chunk分到多个文件 Chr1.1 Chr1.2 ...... Chr5.5 分成子块运行，每条染色体分5个文件
+#创建多个文件，将对应的chunk转移到对应文件夹运行估算mod过程，
+for i in 1 2 3 4 5; do for j in 1 2 3 4 5 ; do mkdir -p Chr${i}.${j};done;done;
+#nohup挂起滑窗mod估计过程
+nohup sh -c 'for file in Chr5.5/Chr5.*.ss;  do root=$(basename ${file} .ss)  ; phastCons --estimate-trees trees/${root} ${file} all.nonconserved-4d.mod --no-post-probs; done; ' &
+
+#从mod中提取数字
+grep "TREE" ChrM.300001-366651.cons.mod |sed -e 's/[A-Za-z : _ () ; ,]/ /g' | tr -s ' ' | sed 's/ /\n/g'
+
+sed -e 's/[A-Za-z : _ () ; ,]/ /g' 将任何大小写字母 : _ () ; , 都替换成空格
+tr -s ' ' 将多个空格压缩成单个空格
+sed 's/ /\n/g' 空格之间换行
+
+写成for循环
+for i in Chr*.*.mod; do grep "TREE" ${i} |sed -e 's/[A-Za-z : _ () ; ,]/ /g' | tr -s ' ' | sed 's/ /\n/g' > ${i}.txt ; done;
+
+再筛选计算
+for i in Chr*.*.noncons.mod.txt; do cat ${i} | awk '$1>=0 && $1<=1 {print $1}' | awk '{sum+=$1}END{print sum}' >> noncons.final.txt;done;
+
+
+一步到位
+for i in Chr*.*.noncons.mod;do grep "TREE" ${i} | sed -e 's/[A-Za-z : _ () ; ,]/ /g' | tr -s ' ' | sed 's/ /\n/g' |  awk '$1>=0 && $1<=1 {print $1}' | awk '{sum+=$1}END{print sum}' >> noncons.txt;done;
+
+
+all.nonconserved-4d.mod 支长和为 3.87056
