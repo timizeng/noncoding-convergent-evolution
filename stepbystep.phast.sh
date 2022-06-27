@@ -35,7 +35,7 @@ for i in *.mask.fa;
 do 
     base=$(basename ${i} .mask.fa) 
     echo "nohup lastz-1.04.00 arabidopsis_thaliana.mask.fa[multiple] \
-    ${i}[multiple] --notransition --ambiguous=iupac --step=20 \
+    ${i}[multiple] --strand=both --notransition --ambiguous=iupac --step=20 \
     --nogapped --format=axt > ${base}.axt &" >> lastz.sh
 done
 chmod 755 lastz.sh
@@ -273,3 +273,42 @@ for i in Chr*.*.noncons.mod;do grep "TREE" ${i} | sed -e 's/[A-Za-z : _ () ; ,]/
 
 
 all.nonconserved-4d.mod 支长和为 3.87056
+
+
+............是用repeat估计non.cons.mod.................
+
+phyloFit --tree "(((arabidopsis_thaliana,theobroma_cacao),(citrus_sinensis,(swietenia_macrophylla,(xylocarpus_granatum,(xylocarpus_rumphii,xylocarpus_moluccensis))))),(populus_trichocarpa,(carallia_pectinifolia,((bruguiera_gymnorhiza,bruguiera_sexangula),((ceriops_tagal,(kandelia_obovata,kandelia_candel)),(rhizophora_mangle,(rhizophora_apiculata,(rhizophora_mucronata,rhizophora_stylosa))))))))" 
+--features Chr1.gtf --do-cats repeat --msa-format MAF --out-root Chr1.repeat.non.cons Chr1.maf
+
+
+nohup sh -c 'for file in Chr1.1/Chr1.*.ss;  do root=$(basename ${file} .ss)  ; phastCons --estimate-trees LINEtrees/${root} ${file} ../Average.LINE.non.cons.mod --no-post-probs; done; ' &
+
+
+
+........在不同物种之间转换坐标.....liftover可行.....
+liftOver conserved.bed at_vs_ors.chain orsconserved.bed unmapp.bed
+#liftover中有一个参数 -minMatch=0.95 (默认值)， 可以调整，使得比对更严格或者更宽松 
+#                    -multiple 设置允许输出多重比对，如果不设置，则多比对的位置都不输出（建议设置）
+
+
+.......使用mafFind也可以做.........例如有一个pair-wirse对齐块：
+
+mafFind arabidopsis_thaliana.bruguiera_gymnorhiza.sing.maf 41693 41708 arabidopsis_thaliana.ChrM slice > out.file
+
+
+再从中提取坐标，若目标物种对应到的是负链 (-)，则转换坐标的方式为：
+a score=51656.000000
+s arabidopsis_thaliana.ChrM                     41693 15 +   366924 ACCACTCGCTCGCCA
+s bruguiera_gymnorhiza.unplaced_scaffold1080     8235 15 -    10476 ACCACTCGCTCGCCG
+
+    染色体位置             开始位置         结束位置     名字（随便）  分数（随便）   链（重要）
+unplaced_scaffold1080   10476-8235-15    10476-8235        name1       0           -
+
+再用bedtools getfasta 指定 -s 提取目标序列
+
+若目标物种对应到的是正链 (+)，则转换坐标的方式为：
+s arabidopsis_thaliana.ChrC                112085 250 + 154478 CTACACGATTAGTTACAAAAGCTTTTTGACAAGCATTCGCTGCAATAGGTCGTGTGAACCAAAAACCTATTAATAAATACGAACACATTCCAACTAATTCCCAAAAAAAATAAACTTGGATCAAATTAGAACTAGTAACTAATCCTAACATTGAAGTATT--AAAAAAACCCATATAAGCAAAAAATCTCAGGTATCCTTGATCATGCGACATATAATTGTCACTATAAATCAGAACCAAAATCCCAACAGT
+s bruguiera_gymnorhiza.unplaced_scaffold63  26350 252 +  27206 CTACACGATTAGTTATAAATGCCTTTTGACAAGCATTCGAGGCAATAGGTTGTGTGAACCAAAACCCTATTAATAAATAAGAACACATTCCAACCAATTCCCAAAAAATATAAATTTGTATCAAATTAGAACTAGTAACTAATCCCACCATTGAAGTATTGAAAAAAAAATCATATAAGCAAAAAATCTCAAATAACTTTGATCATGAGCCATATAATTGTCACTATAAAGAAGAACCAAAGTTCCAACTGT
+
+染色体位置             开始位置    结束位置     名字（随便） 分数（随便）  链（重要）
+unplaced_scaffold63    26350     26350+252      name1       0           +
