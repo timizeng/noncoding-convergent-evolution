@@ -151,7 +151,40 @@ do
     phyloFit --tree "(((arabidopsis_thaliana,theobroma_cacao),(citrus_sinensis,(swietenia_macrophylla,(xylocarpus_granatum,(xylocarpus_rumphii,xylocarpus_moluccensis))))),(populus_trichocarpa,(carallia_pectinifolia,((bruguiera_gymnorhiza,bruguiera_sexangula),((ceriops_tagal,(kandelia_obovata,kandelia_candel)),(rhizophora_mangle,(rhizophora_apiculata,(rhizophora_mucronata,rhizophora_stylosa))))))))" --msa-format SS --out-root nonconserved-4d.${base} ${i}
 done
 
+#使用phyloBoot获得平均noncons.mod,后续分析均以该noncons.mod为基础
+phyloBoot --read-mods *.mod --output-average Average.non.cons.mod
 
+#随后使用100k滑窗估计每个滑窗的cons和noncons的mod，取cons的平均cons.mod
+mkdir -p chunks            # put fragments here
+        for file in Chr*.maf ; do
+            root=$(basename ${file} .maf)
+            msa_split ${file} --in-format MAF --refseq ${root}.fa \
+                --windows 1000000,0 --out-root chunks/${root} --out-format SS \
+                --min-informative 1000 --between-blocks 5000 
+        done
+
+mkdir -p trees     # put estimated tree models here
+rm -f trees/*      # in case old versions left over
+
+#以平均non.cons.mod作为输入，对每个滑窗进行估算，随后使用phyloBoot获得平均模型
+nohup sh -c 'for file in chunks/Chr*.ss;  do root=$(basename ${file} .ss)  ; phastCons --estimate-trees trees/${root} ${file} all.ave.noncons.mod --no-post-probs; done;' &
+
+phyloBoot --read-mods *.cons.mod --output-average Average.cons.mod
+
+#最后使用Average.cons.mod和Average.non.cons.mod，用phastCons进行扫描获得保守元件
+for i in *.maf; 
+do      
+    base=$(basename ${i} .maf)   
+    echo "nohup phastCons  --msa-format MAF ${base}.maf \
+    --most-conserved phastCons.${base}.bed \
+    Average.cons.mod,Average.non.cons.mod > phastCons.${base}.wig &" >> con.element.sh 
+done
+chmod 755 con.element.sh
+./con.element.sh
+
+
+
+......................其他的小插曲........................................................
 .......................通过estimate-rho分别计算单条染色体的con.elements....................
 ##通过estimate-rho和每条染色体4d位点估计出的noncons.mod来估算每条染色体的cons.mod
 for i in *.maf;
